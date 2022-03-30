@@ -1,9 +1,20 @@
 const express = require('express');
-const ejs = require('ejs');
+const mongoose = require('mongoose');
+const pageRoutes = require('./routes/pageRoutes')
+const courseRoutes = require('./routes/courseRoutes')
+
 const app = express();
 
 const server = '127.0.0.1';
 const port = 3000;
+
+// CONNECT DATABASE
+mongoose.connect('mongodb://localhost/smartedu-db', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then( () => {
+  console.log('Database Connected Successfuly');
+})
 
 // TEMPLATE ENGINE
 app.set('view engine', 'ejs')
@@ -12,17 +23,9 @@ app.set('view engine', 'ejs')
 app.use(express.static('public'))
 
 // ROUTES
-app.get('/', (req, res) => {
-  res.status(200).render('index', {
-      page_name : 'index'
-  })
-});
+app.use('/', pageRoutes);
+app.use('/courses', courseRoutes)
 
-app.get('/about', (req, res) => {
-    res.status(200).render('about', {
-        page_name : 'about'
-    })
-})
 
 app.listen(port, server, () => {
   console.log(`App started on port http://${server}:${port}/`);
