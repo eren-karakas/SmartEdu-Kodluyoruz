@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const fileUpload = require('express-fileupload');
 const pageRoutes = require('./routes/pageRoutes')
 const courseRoutes = require('./routes/courseRoutes')
+const categoryRoutes = require('./routes/categoryRoutes');
 
 const app = express();
 
@@ -29,7 +30,7 @@ app.use(fileUpload())
 // ROUTES
 app.use('/', pageRoutes);
 app.use('/courses', courseRoutes)
-
+app.use('/categories', categoryRoutes)
 
 app.listen(port, server, () => {
   console.log(`App started on port http://${server}:${port}/`);
