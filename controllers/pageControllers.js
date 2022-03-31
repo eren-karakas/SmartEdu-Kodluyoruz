@@ -10,6 +10,8 @@ const getAboutPage = (req, res) => {
   });
 };
 
+
+
 module.exports = {
   getIndexPage,
   getAboutPage,
