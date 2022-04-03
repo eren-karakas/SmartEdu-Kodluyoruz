@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')
 const fileUpload = require('express-fileupload');
 const pageRoutes = require('./routes/pageRoutes');
 const courseRoutes = require('./routes/courseRoutes');
@@ -40,6 +41,7 @@ app.use(
     secret: 'mySecretKey',
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: 'mongodb://localhost/smartedu-db' })
   })
 );
 

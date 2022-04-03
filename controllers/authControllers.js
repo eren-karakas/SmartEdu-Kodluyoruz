@@ -38,7 +38,14 @@ const loginUser = async (req, res) => {
   }
 };
 
+const logoutUser = async (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/')
+  })
+};
+
 module.exports = {
   createUser,
   loginUser,
+  logoutUser
 };
