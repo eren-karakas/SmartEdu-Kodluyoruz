@@ -1,3 +1,4 @@
+const User = require('../models/User');
 const Course = require('../models/Course');
 const Category = require('../models/Category');
 
@@ -5,28 +6,26 @@ const fs = require('fs');
 
 const createCourse = async (req, res) => {
   try {
-    /* let uploadedDir = 'public/uploads';
+    let uploadedDir = 'public/uploads';
 
-    if(!fs.existsSync(uploadedDir)){
-        fs.mkdir(uploadedDir)
+    if (!fs.existsSync(uploadedDir)) {
+      fs.mkdirSync(uploadedDir);
     }
 
-    let uploadedImage = req.files.body
-    let uploadedPath = __dirname + '/../public' + uploadedImage.name
+    let uploadedImage = req.files.image;
+    let uploadedPath = __dirname + '/../public/uploads/' + uploadedImage.name;
 
     uploadedImage.mv(uploadedPath, async () => {
-        await Course.create({
-            ...req.body,
-            image : '/uploads' + uploadedImage.name
-        })
-    }); */
-
-    let course = await Course.create(req.body);
-
-    res.status(201).json({
-      status: 'success',
-      course,
+      await Course.create({
+        name: req.body.name,
+        description: req.body.description,
+        category: req.body.category,
+        user: req.session.userID,
+        image: '/uploads/' + uploadedImage.name,
+      });
     });
+
+    res.status(201).redirect('/courses');
   } catch (error) {
     res.status(400).json({
       status: 'fail',
@@ -46,7 +45,7 @@ const getAllCourses = async (req, res) => {
       filter = { category: category._id };
     }
 
-    const courses = await Course.find(filter);
+    const courses = await Course.find(filter).sort('-createdAt');
     const categories = await Category.find();
 
     res.status(200).render('courses', {
@@ -64,12 +63,30 @@ const getAllCourses = async (req, res) => {
 
 const getCourse = async (req, res) => {
   try {
-    const course = await Course.findOne({ slug: req.params.slug });
+    const course = await Course.findOne({ slug: req.params.slug }).populate('user');
+    const categories = await Category.find();
 
     res.status(200).render('course', {
       course,
+      categories,
       page_name: 'courses',
     });
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      error,
+    });
+  }
+};
+
+const enrollCourse = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.userID);
+    await user.courses.push({_id: req.body.course_id});
+    await user.save();
+
+
+    res.status(200).redirect('/users/dashboard');
   } catch (error) {
     res.status(400).json({
       status: 'fail',
@@ -82,4 +99,5 @@ module.exports = {
   createCourse,
   getAllCourses,
   getCourse,
+  enrollCourse
 };

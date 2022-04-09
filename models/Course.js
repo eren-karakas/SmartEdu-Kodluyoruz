@@ -15,7 +15,7 @@ const CourseSchema = new Schema({
   },
   image: {
     type: String,
-    required: true,
+    required: true
   },
   createdAt: {
     type: Date,
@@ -29,6 +29,10 @@ const CourseSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }
 });
 
 CourseSchema.pre('validate', function (next) {
