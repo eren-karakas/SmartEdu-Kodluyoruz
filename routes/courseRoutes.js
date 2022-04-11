@@ -8,5 +8,6 @@ router.route('/').post(roleMiddlewares(['teacher', 'admin']), courseControllers.
 router.route('/').get(courseControllers.getAllCourses);
 router.route('/:slug').get(courseControllers.getCourse);
 router.route('/enroll').post(courseControllers.enrollCourse);
+router.route('/release').post(courseControllers.releaseCourse);
 
 module.exports = router;
