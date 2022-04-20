@@ -130,8 +130,34 @@ const releaseCourse = async (req, res) => {
 
 const deleteCourse = async (req, res) => {
   try {
-    const course = await Course.findOneAndRemove({slug: req.params.slug});
+    const course = await Course.findOne({slug: req.params.slug});
+    let deletedImage = __dirname + '/../public' + course.image
+    console.log(deletedImage);
+
+    if((await Course.find({image: course.image})).length < 2){
+      fs.unlinkSync(deletedImage);
+    }
+
+    await Course.findOneAndRemove(req.params.slug);
+
     req.flash('success', `${course.name} has been removed succesfully`);
+
+    res.status(200).redirect('/users/dashboard');
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      error,
+    });
+  }
+};
+
+const updateCourse = async (req, res) => {
+  try {
+    const course = await Course.findOne({slug: req.params.slug});
+    course.name = req.body.name;
+    course.description = req.body.description;
+    course.category = req.body.category;
+    course.save();
 
     res.status(200).redirect('/users/dashboard');
   } catch (error) {
@@ -150,5 +176,6 @@ module.exports = {
   getCourse,
   enrollCourse,
   releaseCourse,
-  deleteCourse
+  deleteCourse,
+  updateCourse
 };
