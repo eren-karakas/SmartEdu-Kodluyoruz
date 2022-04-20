@@ -33,12 +33,12 @@ const loginUser = async (req, res) => {
             req.session.userID = user._id;
             res.status(200).redirect('/users/dashboard');
           } else {
-            req.flash('error', 'Your Password is not Correct!');
+            req.flash('error', ' Your Password is not Correct !');
             res.status(400).redirect('/login');
           }
         });
       } else {
-        req.flash('error', 'User is not Exists!');
+        req.flash('error', ' User is not Exists !');
         res.status(400).redirect('/login');
       }
     });

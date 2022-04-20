@@ -128,10 +128,27 @@ const releaseCourse = async (req, res) => {
   }
 };
 
+const deleteCourse = async (req, res) => {
+  try {
+    const course = await Course.findOneAndRemove({slug: req.params.slug});
+    req.flash('success', `${course.name} has been removed succesfully`);
+
+    res.status(200).redirect('/users/dashboard');
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      error,
+    });
+  }
+};
+
+
+
 module.exports = {
   createCourse,
   getAllCourses,
   getCourse,
   enrollCourse,
-  releaseCourse
+  releaseCourse,
+  deleteCourse
 };

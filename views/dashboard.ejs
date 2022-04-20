@@ -1,5 +1,7 @@
 <%- include('partials/_header.ejs'); %>
 
+	
+
 	<%- include('partials/_navigation.ejs'); %>
 
 	<% if(user) { %>	
@@ -61,6 +63,19 @@
 			<div id="overviews" class="section wb">
 				<div class="container">
 					<div class="row"> 
+						<div class="offset-1 col-lg-10 col-md-10 col-sm-10">
+						<% if(flashMessages) { %>
+							<% if(flashMessages.success){ %>
+								<div class="alert alert-success">
+									<%= flashMessages.success %>
+								</div>
+							<% } else if(flashMessages.error){ %>
+								<div class="alert alert-danger">
+									<%= flashMessages.error %>
+								</div>
+							<% } %>
+						<% } %>
+						</div>
 						<div class="col-lg-12 text-center">
 							<button class="btn btn-lg btn-warning rounded-0 text-white" href="#" data-toggle="modal" data-target="#addCourse">
 								<span>CREATE NEW COURSE</span>
@@ -88,6 +103,14 @@
 										</div>
 										<div class="course-desc">
 											<p> <%= courses[i].description %></p>
+										</div>
+										<div class="clearfix">
+											<ul style="list-style-type: none;">
+												<li style="float: left;"><button class="btn btn-primary rounded-0 text-white">UPDATE</button></li>
+												<li style="float: right;"><a href="/courses/<%= courses[i].slug %>?_method=DELETE" 
+													onclick="return confirm('Are you sure?')" 
+													class="btn btn-danger rounded-0 text-white">DELETE</a></li>
+											</ul>
 										</div>
 									</div>
 								</div>
