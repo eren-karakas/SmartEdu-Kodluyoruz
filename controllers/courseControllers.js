@@ -79,7 +79,7 @@ const getAllCourses = async (req, res) => {
 const getCourse = async (req, res) => {
   try {
     const user = await User.findById(req.session.userID);
-    const course = await Course.findOne({ slug: req.params.slug }).populate('user');
+    const course = await Course.findOne({ slug: req.params.slug }).populate('user').populate('category');
     const categories = await Category.find();
 
     res.status(200).render('course', {
