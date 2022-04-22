@@ -10,4 +10,5 @@ router.route('/register').get(redirectMiddlewares, pageControllers.getRegisterPa
 router.route('/login').get(redirectMiddlewares, pageControllers.getLoginPage);
 router.route('/contact').get(pageControllers.getContactPage);
 router.route('/contact').post(pageControllers.sendEmail);
+
 module.exports = router;

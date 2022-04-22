@@ -45,22 +45,24 @@ const getAllCourses = async (req, res) => {
       filter = { category: category._id };
     }
 
-    if (query){
-      filter = { name: query}
+    if (query) {
+      filter = { name: query };
     }
 
-    if(!query && !categorySlug){
-      filter.name = "";
+    if (!query && !categorySlug) {
+      filter.name = '';
       filter.category = null;
     }
 
     const courses = await Course.find({
       $or: [
-        {name: { $regex: '.*' + filter.name + '.*', $options: 'i'}},
-        {category: filter.category}
-      ]
-    }).sort('-createdAt').populate('user');
-    
+        { name: { $regex: '.*' + filter.name + '.*', $options: 'i' } },
+        { category: filter.category },
+      ],
+    })
+      .sort('-createdAt')
+      .populate('user');
+
     const categories = await Category.find();
 
     res.status(200).render('courses', {
@@ -79,7 +81,10 @@ const getAllCourses = async (req, res) => {
 const getCourse = async (req, res) => {
   try {
     const user = await User.findById(req.session.userID);
-    const course = await Course.findOne({ slug: req.params.slug }).populate('user').populate('category');
+    const course = await Course.findOne({ slug: req.params.slug })
+      .populate('user')
+      .populate('category');
+    console.log(course);
     const categories = await Category.find();
 
     res.status(200).render('course', {
@@ -99,9 +104,8 @@ const getCourse = async (req, res) => {
 const enrollCourse = async (req, res) => {
   try {
     const user = await User.findById(req.session.userID);
-    await user.courses.push({_id: req.body.course_id});
+    await user.courses.push({ _id: req.body.course_id });
     await user.save();
-
 
     res.status(200).redirect('/users/dashboard');
   } catch (error) {
@@ -115,9 +119,8 @@ const enrollCourse = async (req, res) => {
 const releaseCourse = async (req, res) => {
   try {
     const user = await User.findById(req.session.userID);
-    await user.courses.pull({_id: req.body.course_id});
+    await user.courses.pull({ _id: req.body.course_id });
     await user.save();
-
 
     res.status(200).redirect('/users/dashboard');
   } catch (error) {
@@ -130,15 +133,15 @@ const releaseCourse = async (req, res) => {
 
 const deleteCourse = async (req, res) => {
   try {
-    const course = await Course.findOne({slug: req.params.slug});
-    let deletedImage = __dirname + '/../public' + course.image
+    const course = await Course.findOne({ slug: req.params.slug });
+    let deletedImage = __dirname + '/../public' + course.image;
     console.log(deletedImage);
 
-    if((await Course.find({image: course.image})).length < 2){
+    if ((await Course.find({ image: course.image })).length < 2) {
       fs.unlinkSync(deletedImage);
     }
 
-    await Course.findOneAndRemove(req.params.slug);
+    await Course.findOneAndRemove({ slug: req.params.slug });
 
     req.flash('success', `${course.name} has been removed succesfully`);
 
@@ -153,7 +156,7 @@ const deleteCourse = async (req, res) => {
 
 const updateCourse = async (req, res) => {
   try {
-    const course = await Course.findOne({slug: req.params.slug});
+    const course = await Course.findOne({ slug: req.params.slug });
     course.name = req.body.name;
     course.description = req.body.description;
     course.category = req.body.category;
@@ -168,8 +171,6 @@ const updateCourse = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   createCourse,
   getAllCourses,
@@ -177,5 +178,5 @@ module.exports = {
   enrollCourse,
   releaseCourse,
   deleteCourse,
-  updateCourse
+  updateCourse,
 };

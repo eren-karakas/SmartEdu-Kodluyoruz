@@ -144,7 +144,6 @@
 														<div class="form-group">
 															<div class="col-sm-12">
 																<select name="category" class="form-control">
-																	<option style="margin-bottom: 10px;" selected value="<%= courses[i].category._id %>"><%= courses[i].category.name %></option>
 																	<% for(let i=0; i < categories.length; i++){ %>
 																		<option value="<%= categories[i]._id %>"><%= categories[i].name %></option>
 																	<% } %>
@@ -250,6 +249,7 @@
 						</div><!-- end col -->
 					</div><!-- end row -->
 					<div class="row mt-5"> 
+						<h2>Users</h2>
 						<table class="table">
 							<thead>
 							  <tr>
@@ -272,8 +272,63 @@
 							<% } %>
 						  </table>	
 					</div><!-- end row -->
+
+					<div class="row mt-5"> 
+						<h2>Categories</h2>
+						<table class="table">
+							<thead>
+							  <tr>
+								<th scope="col">#ID</th>
+								<th scope="col">Name</th>
+								<th scope="col">Delete</th>
+								<th scope="col"><button class="btn btn-success rounded-0 text-white"
+									href="#" data-toggle="modal" data-target="#addCategory"><span>CREATE NEW CATEGORY</span></button></th>
+							  </tr>
+							</thead>
+							<tbody>
+							<% for (let i = 0; i < categories.length; i++){ %>
+							  <tr>
+								<th scope="row"><%=categories[i]._id %></th>
+								<td><%= categories[i].name %></td>
+								<td><a href="/categories/<%= categories[i]._id %>?_method=DELETE" onclick="return confirm('Are you sure?')" 
+									class="btn btn-danger rounded-0 text-white">DELETE</a></td>
+							  </tr>
+							</tbody>
+							<% } %>
+						  </table>	
+					</div><!-- end row -->
 				</div><!-- end container -->
 			</div><!-- end section -->
+			<div class="modal fade" id="addCategory" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-body customer-box">
+							<!-- Tab Panes-->
+							<div class="tab-content">
+								<div class="tab-pane active" id="Login">
+									<form method="post" action="/categories" class="form-horizontal" encType="multipart/form-data">
+										<div class="form-group">
+											<div class="col-sm-12">
+												<input type="text" name="name" class="form-control" placeholder="Category Name">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-10">
+												<button type="submit" class="btn btn-light btn-radius btn-brd grd1">
+													Submit
+												</button>
+												<button type="submit" class="btn btn-light btn-radius btn-brd grd1" data-dismiss="modal" aria-hidden="true">
+													Cancel
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		<% } %>
 
 	<% } %>
